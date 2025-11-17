@@ -1,0 +1,106 @@
+-- List of Parent Tables.
+CREATE TABLE ARTISTS (
+    ArtistID INTEGER PRIMARY KEY,
+    ArtistName TEXT NOT NULL
+);
+
+CREATE TABLE GENRES (
+    GenreID INTEGER PRIMARY KEY,
+    GenreName TEXT NOT NULL
+);
+
+CREATE TABLE RATINGS (
+    RatingID INTEGER PRIMARY KEY,
+    RatingCode TEXT NOT NULL,
+    RatingDesc TEXT
+);
+
+CREATE TABLE CUSTOMER (
+    CustomerID INTEGER PRIMARY KEY,
+    CustomerName TEXT,
+    Email TEXT,
+    PhoneNumber REAL,
+    Address TEXT,
+    DateOfBirth TEXT
+);
+
+CREATE TABLE EMPLOYEE (
+    EmployeeID INTEGER PRIMARY KEY,
+    EmployeeName TEXT NOT NULL,
+    Email TEXT NOT NULL,
+    PhoneNumber REAL,
+    EmployeeRole TEXT NOT NULL
+);
+
+-- Dependent Tables
+CREATE TABLE ALBUMS (
+    ProductID INTEGER PRIMARY KEY,
+    ArtistID INTEGER,
+    AlbumGenreID INTEGER,
+    AlbumName TEXT NOT NULL,
+    MediaFormat TEXT NOT NULL,
+    Songs TEXT NOT NULL,
+    SalesYTD INTEGER NOT NULL,
+    InventoryAmount INTEGER NOT NULL,
+    Price REAL NOT NULL,
+    FOREIGN KEY (ArtistID) REFERENCES ARTISTS(ArtistID),
+    FOREIGN KEY (AlbumGenreID) REFERENCES GENRES(GenreID)
+);
+
+CREATE TABLE MOVIES (
+    ProductID INTEGER PRIMARY KEY,
+    MovieName TEXT NOT NULL,
+    Director TEXT NOT NULL,
+    RatingID INTEGER,
+    MovieGenreID INTEGER,
+    MediaFormat TEXT NOT NULL,
+    SalesYTD INTEGER NOT NULL,
+    InventoryAmount INTEGER NOT NULL,
+    Price REAL NOT NULL,
+    FOREIGN KEY (RatingID) REFERENCES RATINGS(RatingID),
+    FOREIGN KEY (MovieGenreID) REFERENCES GENRES(GenreID)
+);
+
+CREATE TABLE PRODUCTS (
+    ProductID INTEGER PRIMARY KEY,
+    ProductType TEXT NOT NULL,
+    Title TEXT NOT NULL,
+    SalesYTD INTEGER NOT NULL,
+    InventoryAmount INTEGER NOT NULL,
+    Price REAL NOT NULL
+);
+
+CREATE TABLE ORDERS (
+    OrderID INTEGER PRIMARY KEY,
+    CustomerID INTEGER,
+    EmployeeID INTEGER,
+    OrderDate TEXT NOT NULL,
+    TotalAmount REAL NOT NULL,
+    Status TEXT NOT NULL,
+    PaymentDate TEXT NOT NULL,
+    PaymentMethod TEXT NOT NULL,
+    PaymentStatus TEXT CHECK (PaymentStatus IN ('Paid','Unpaid')) NOT NULL,
+    Title TEXT NOT NULL,
+    FOREIGN KEY (CustomerID) REFERENCES CUSTOMER(CustomerID),
+    FOREIGN KEY (EmployeeID) REFERENCES EMPLOYEE(EmployeeID)
+);
+
+CREATE TABLE ORDER_ITEMS (
+    OrderItemID INTEGER PRIMARY KEY,
+    OrderID INTEGER NOT NULL,
+    ProductID INTEGER NOT NULL,
+    Quantity INTEGER NOT NULL,
+    Price REAL NOT NULL,
+    FOREIGN KEY (OrderID) REFERENCES ORDERS(OrderID)
+);
+
+CREATE TABLE INVENTORY_RECEIVING (
+    TransactionID INTEGER PRIMARY KEY,
+    ProductID INTEGER NOT NULL,
+    TransactionDate TEXT NOT NULL,
+    TransactionType TEXT NOT NULL,
+    OrderID INTEGER NOT NULL,
+    Quantity INTEGER NOT NULL,
+    EmployeeID INTEGER NOT NULL,
+    FOREIGN KEY (EmployeeID) REFERENCES EMPLOYEE(EmployeeID)
+);
