@@ -22,7 +22,7 @@ def run_sql_file(filename):
     sql = open(filename).read()
     
     # Since SQLite doesn't actually output any SQL results, we need to split it manually for
-    # our SELECT qwueries.
+    # our SELECT queries.
     for stmt in [s.strip() for s in sql.split(';') if s.strip()]:
         cur.execute(stmt)
    
